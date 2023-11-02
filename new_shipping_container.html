@@ -1,0 +1,187 @@
+<div class="checkout-shipping-method">
+  <div class="step-title" data-role="title" data-bind="i18n: 'Shipping Methods'">Shipping Methods</div>
+  <!-- ko foreach: getRegion('before-shipping-method-form') -->
+  <!-- ko template: getTemplate() -->
+  <!-- ko foreach: {data: elems, as: 'element'} -->
+  <!-- ko if: hasTemplate() -->
+  <!-- ko template: getTemplate() -->
+  <div class="shipping-policy-block field-tooltip" data-bind="visible: config.isEnabled" style="display: none;">
+    <span class="field-tooltip-action" tabindex="0" data-toggle="dropdown" data-bind="mageInit: {'dropdown':{'activeClass': '_active'}}" aria-haspopup="true" aria-expanded="false" role="button">
+      <!-- ko i18n: 'See our Shipping Policy' -->
+      <span>See our Shipping Policy</span>
+      <!-- /ko -->
+    </span>
+    <div class="field-tooltip-content" data-target="dropdown" aria-hidden="true">
+      <span data-bind="html: config.shippingPolicyContent"></span>
+    </div>
+  </div>
+  <!-- /ko -->
+  <!-- /ko -->
+  <!-- ko if: hasTemplate() -->
+  <!-- ko template: getTemplate() -->
+  <div class="custom-checkout-message" data-bind="html: window.checkoutConfig.processing_time">
+    <style>
+      #html-body [data-pb-style=AA49UB7] {
+        justify-content: flex-start;
+        display: flex;
+        flex-direction: column;
+        background-position: left top;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: scroll;
+        border-style: none;
+        border-width: 1px;
+        border-radius: 0;
+        margin: 0;
+        padding: 10px 0 0
+      }
+
+      #html-body [data-pb-style=HRDX0CM] {
+        border-style: none;
+        border-width: 1px;
+        border-radius: 0;
+        margin: 0;
+        padding: 0
+      }
+    </style>
+    <div data-content-type="row" data-appearance="contained" data-element="main">
+      <div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-video-fallback-src="" data-element="inner" data-pb-style="AA49UB7">
+        <div data-content-type="text" data-appearance="default" data-element="main" data-pb-style="HRDX0CM">
+          <p>All expedited shipping orders adhere to 1-2 business day processing times. The timeframe for the shipment will begin when the carrier picks up your order for delivery.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /ko -->
+  <!-- /ko -->
+  <!-- /ko -->
+  <!-- /ko -->
+  <!-- /ko -->
+  <div id="checkout-step-shipping_method" class="step-content" data-role="content" role="tabpanel" aria-hidden="false">
+    <!-- ko if: rates().length -->
+    <form id="co-shipping-method-form" class="form methods-shipping" novalidate="novalidate" data-bind="submit: setShippingInformation">
+      <!-- ko template: shippingMethodListTemplate -->
+      <div id="checkout-shipping-method-load">
+        <table class="table-checkout-shipping-method">
+          <thead>
+            <tr class="row">
+              <th class="col col-method" data-bind="i18n: 'Select Method'">Select Method</th>
+              <th class="col col-price" data-bind="i18n: 'Price'">Price</th>
+              <th class="col col-method" data-bind="i18n: 'Method Title'">Method Title</th>
+              <th class="col col-carrier" data-bind="i18n: 'Carrier Title'">Carrier Title</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- ko foreach: { data: rates(), as: 'method'} -->
+            <!--ko template: { name: element.shippingMethodItemTemplate} -->
+            <tr data-bind="attr: {'class': 'row ' + method.carrier_code}, click: element.selectShippingMethod" class="row matrixrate">
+              <td class="col col-method">
+                <!-- ko ifnot: method.error_message -->
+                <!-- /ko -->
+              </td>
+              <td class="col col-price">
+                <!-- ko foreach: element.getRegion('price') -->
+                <!-- ko template: getTemplate() -->
+                <!-- ko if:  isDisplayShippingPriceExclTax -->
+                <span class="price">
+                  <span class="price" data-bind="text: getFormattedPrice(method.price_excl_tax)">$0.00</span>
+                </span>
+                <!-- /ko -->
+                <!-- ko ifnot: isDisplayShippingPriceExclTax -->
+                <!-- /ko -->
+                <!-- ko if:  (isDisplayShippingBothPrices && (method.price_excl_tax != method.price_incl_tax))-->
+                <!-- /ko -->
+                <!-- /ko -->
+                <!-- /ko -->
+              </td>
+              <td class="col col-method" data-bind="attr: {'id': 'label_method_' + method.method_code + '_' + method.carrier_code}, text: method.method_title" id="label_method_null_matrixrate"></td>
+              <td class="col col-carrier" data-bind="attr: {'id': 'label_carrier_' + method.method_code + '_' + method.carrier_code}, text: method.carrier_title" id="label_carrier_null_matrixrate"></td>
+            </tr>
+            <!-- ko if: method.error_message -->
+            <tr class="row row-error">
+              <td class="col col-error" colspan="4">
+                <div class="message error" role="alert">
+                  <div>Please us the <strong>Contact Us</strong> button below to learn how to ship outside the United States. </div>
+                </div>
+                <span class="no-display">
+                  <input type="radio" data-bind="attr: {'value' : method.method_code, 'id': 's_method_' + method.method_code}" id="s_method_null">
+                </span>
+              </td>
+            </tr>
+            <!-- /ko -->
+            <!-- /ko -->
+            <!-- /ko -->
+          </tbody>
+        </table>
+        <div style="align-self: center;">
+          <button type="button" title="Contact Us" style="
+    padding-left: 133px;
+    padding-right: 133px;
+">
+            <span>Contact Us</span>
+          </button>
+        </div>
+      </div>
+      <!-- /ko -->
+      <div id="onepage-checkout-shipping-method-additional-load">
+        <!-- ko foreach: getRegion('shippingAdditional') -->
+        <!-- ko template: getTemplate() -->
+        <!-- ko foreach: {data: elems, as: 'element'} -->
+        <!-- ko if: hasTemplate() -->
+        <!-- ko template: getTemplate() -->
+        <div class="nrshipping-settings-container" data-bind="visible: visible, style: { borderColor: displayColor() }" xmlns="http://www.w3.org/1999/html" style="display: none;">
+          <fieldset class="fieldset nrshipping-settings matrixrate" data-bind="css: getCarrierCode()">
+            <!-- ko if: image() -->
+            <!-- /ko -->
+            <!-- ko if: title() -->
+            <!-- /ko -->
+            <!-- ko foreach: { data: commentsBefore, as: 'comment' } -->
+            <!-- /ko -->
+            <!-- ko foreach: { data: elems, as: 'element' } -->
+            <!-- /ko -->
+            <!-- ko if: footnotes -->
+            <!-- ko foreach: { data: footnotes, as: 'footnote' } -->
+            <!-- /ko -->
+            <!-- /ko -->
+            <!-- ko foreach: { data: commentsAfter, as: 'comment' } -->
+            <!-- /ko -->
+            <!-- ko if: errors() -->
+            <!-- ko foreach: { data: errors, as: 'error' } -->
+            <!-- /ko -->
+            <!-- /ko -->
+          </fieldset>
+        </div>
+        <!-- /ko -->
+        <!-- /ko -->
+        <!-- ko if: hasTemplate() -->
+        <!-- ko template: getTemplate() -->
+        <div id="cchsuretax_ship_addr_correction" class="" data-bind="" style="display: none;">
+          <div class="warning message" data-ui-id="message-error">
+            <div>Please verify shipping address.</div>
+          </div>
+          <div id="cchsuretax_ship_orig_addr">
+            <div id="cchsuretax_radio" class="cchsuretax-addr-radio"></div>
+            <div style="display: none;" id="cchsuretax_ship_orig_placeholder"></div>
+          </div>
+        </div>
+        <!-- /ko -->
+        <!-- /ko -->
+        <!-- /ko -->
+        <!-- /ko -->
+        <!-- /ko -->
+      </div>
+      <!-- ko if: errorValidationMessage().length -->
+      <!-- /ko -->
+      <div class="actions-toolbar" id="shipping-method-buttons-container">
+        <div class="primary" data-bind="visible: !(isQuoteAddressDeleted &amp;&amp; isQuoteAddressLocked)">
+          <button data-role="opc-continue" type="submit" class="button action continue primary">
+            <span data-bind="i18n: 'Next'">Next</span>
+          </button>
+        </div>
+      </div>
+    </form>
+    <!-- /ko -->
+    <!-- ko ifnot: rates().length > 0 -->
+    <!-- /ko -->
+  </div>
+</div>
